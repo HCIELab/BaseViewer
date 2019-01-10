@@ -1,27 +1,20 @@
 //JS for 3D BaseViewer
+//Written by Kenny Friedman January 2019
 
-
-function dragOverHandler(ev) {
-	console.log('File(s) in drop zone'); 
-
-	// Prevent default behavior (Prevent file from being opened)
-	ev.preventDefault();
-}
-
-
+// this confirms that WebGL needs to be available
 if ( WEBGL.isWebGLAvailable() === false ) {
-
 	document.body.appendChild( WEBGL.getWebGLErrorMessage() );
-
 }
 
+//global vars
 var camera, controls, scene, renderer;
 
+//init the scene and request it to be animated
 init();
-//render(); // remove when using next line for animation loop (requestAnimationFrame)
 animate();
 
-function addObj(pathToLoad) {
+//this function loads an STL object. Pass it the URL of the STL file, or a URI of the STL as data.
+function addSTLObj(pathToLoad) {
 	var material = new THREE.MeshPhongMaterial( { color: 0xffffff, flatShading: true } );
 	var loader = new THREE.STLLoader();
 	loader.load( pathToLoad, function ( geometry ) {
@@ -36,17 +29,20 @@ function addObj(pathToLoad) {
 	animate();
 }
 
+//this function inits the entire scene
 function init() {
 
+	//new ThreeJS scene created
 	scene = new THREE.Scene();
 	scene.background = new THREE.Color( 0xcccccc );
-// 				scene.fog = new THREE.FogExp2( 0xcccccc, 0.002 );
 
+	//new ThreeJS renderer
 	renderer = new THREE.WebGLRenderer( { antialias: true } );
 	renderer.setPixelRatio( window.devicePixelRatio );
 	renderer.setSize( window.innerWidth, window.innerHeight );
 	document.body.appendChild( renderer.domElement );
 
+	//new camera
 	camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 1000 );
 	camera.position.set( 400, 200, 0 );
 
@@ -72,8 +68,7 @@ function init() {
 	var geometry = new THREE.CylinderBufferGeometry( 0, 10, 30, 4, 1 );
 	var material = new THREE.MeshPhongMaterial( { color: 0xffffff, flatShading: true } );
 	
-	// lights
-
+	// lights (these are distinct so that we can test rotation, but it could easy be uniform to look nicer)
 	var light = new THREE.DirectionalLight( 0xffffff );
 	light.position.set( 1, 1, 1 );
 	scene.add( light );
@@ -85,12 +80,11 @@ function init() {
 	var light = new THREE.AmbientLight( 0x222222 );
 	scene.add( light );
 
-	//
-
 	window.addEventListener( 'resize', onWindowResize, false );
 
 }
 
+//change view size when the window resizes
 function onWindowResize() {
 
 	camera.aspect = window.innerWidth / window.innerHeight;
@@ -100,6 +94,7 @@ function onWindowResize() {
 
 }
 
+//animation
 function animate() {
 
 	requestAnimationFrame( animate );
@@ -107,15 +102,22 @@ function animate() {
 	controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
 
 	render();
-
 }
 
+//renders the scene
 function render() {
-
 	renderer.render( scene, camera );
-
 }
 
+//This function runs when a file is dragged into view. Prevents it from replacing the website.
+function dragOverHandler(ev) {
+	console.log('File(s) in drop zone'); 
+
+	// Prevent default behavior (Prevent file from being opened)
+	ev.preventDefault();
+}
+
+//occurs when a file is dropped into the scene
 function dropHandler(ev) {
 	console.log('File(s) dropped');
 
@@ -136,7 +138,7 @@ function dropHandler(ev) {
 
 				var reader = new FileReader();
 				reader.onloadend = function() {
-					addObj(this.result); 
+					addSTLObj(this.result); 
 				}
 				reader.readAsDataURL(file);
 			}
