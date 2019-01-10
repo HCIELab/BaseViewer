@@ -9,9 +9,6 @@ function dragOverHandler(ev) {
 }
 
 
-
-
-
 if ( WEBGL.isWebGLAvailable() === false ) {
 
 	document.body.appendChild( WEBGL.getWebGLErrorMessage() );
@@ -74,37 +71,7 @@ function init() {
 
 	var geometry = new THREE.CylinderBufferGeometry( 0, 10, 30, 4, 1 );
 	var material = new THREE.MeshPhongMaterial( { color: 0xffffff, flatShading: true } );
-
-
-	for ( var i = 0; i < 500; i ++ ) {
-
-		var mesh = new THREE.Mesh( geometry, material );
-		mesh.position.x = Math.random() * 1600 - 800;
-		mesh.position.y = 0;
-		mesh.position.z = Math.random() * 1600 - 800;
-		mesh.updateMatrix();
-		mesh.matrixAutoUpdate = false;
-		scene.add( mesh );
-
-	}
 	
-
-	
-	
-	// var loader = new THREE.STLLoader();
-	// loader.load( './example.stl', function ( geometry ) {
-	// 	var mesh = new THREE.Mesh( geometry, material );
-	// 	mesh.position.set( 0, - 0.37, - 0.6 );
-	// 	mesh.rotation.set( - Math.PI / 2, 0, 0 );
-	// 	mesh.scale.set( 2, 2, 2 );
-	// 	mesh.castShadow = true;
-	// 	mesh.receiveShadow = true;
-	// 	scene.add( mesh );
-	// } );
-	
-	
-	
-
 	// lights
 
 	var light = new THREE.DirectionalLight( 0xffffff );
@@ -166,15 +133,12 @@ function dropHandler(ev) {
 			if (ev.dataTransfer.items[i].kind === 'file') {
 				console.log("kind is file");
 				var file = ev.dataTransfer.items[i].getAsFile();
+
 				var reader = new FileReader();
+				reader.onloadend = function() {
+					addObj(this.result); 
+				}
 				reader.readAsDataURL(file);
-				var bs = reader.result;
-				console.log(reader);
-				console.log(bs);
-				dropped_file_as_uri = reader.result;
-				//console.log('... file[' + i + '].name = ' + file.name);
-				console.log(dropped_file_as_uri);
-				addObj(dropped_file_as_uri);
 			}
 		}
 	}
