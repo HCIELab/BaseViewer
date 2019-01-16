@@ -8,7 +8,7 @@ if ( WEBGL.isWebGLAvailable() === false ) {
 
 //global vars
 var camera, controls, scene, renderer;
-const sideBarWidth = 0;
+const sideBarWidth = document.getElementById("sidebar").offsetWidth;
 
 //init the scene and request it to be animated
 init();
@@ -43,7 +43,7 @@ function init() {
 	renderer = new THREE.WebGLRenderer( { antialias: true } );
 	renderer.setPixelRatio( window.devicePixelRatio );
 	renderer.setSize( widthWithoutSideBar, window.innerHeight );
-	document.getElementById("canvas-wrapper").appendChild( renderer.domElement );
+	document.getElementById("canvasWrapper").appendChild( renderer.domElement );
 	//document.body.appendChild( renderer.domElement );
 
 	//new camera
@@ -139,8 +139,12 @@ function dropHandler(ev) {
 			console.log("data transfer item #"+i);
 			// If dropped items aren't files, reject them
 			if (ev.dataTransfer.items[i].kind === 'file') {
-				console.log("kind is file");
+				//Get the file
 				var file = ev.dataTransfer.items[i].getAsFile();
+				
+				//Get the filename
+				var fileName = file.name;
+				document.getElementById("filename").innerHTML = fileName;
 
 				var reader = new FileReader();
 				reader.onloadend = function() {

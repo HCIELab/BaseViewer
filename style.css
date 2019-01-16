@@ -22,3 +22,12 @@ body {
 a {
 	color: red;
 }
+
+#sidebar {
+	width: 320px;
+	background-color: white;
+	height: 100vh;
+	position: fixed;
+	top:0;
+	right:0;
+}
