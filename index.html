@@ -9,9 +9,20 @@
 	</head>
 
 	<body ondrop="dropHandler(event);" ondragover="dragOverHandler(event);">
-		<div id="info">
-			<p>3D Viewer</p>
+		
+		<div id="canvas-wrapper" >
+			<div id="info">
+				<p>3D Viewer</p>
+			</div>
 		</div>
+		
+<!--
+		<div id="side-bar" style="width: 320px;background-color: red;height: 100vh;position: fixed;top:0;right:0;">
+			hello
+		</div>
+-->
+		
+		
 
 		<script src="./js/three.min.js"></script>
 		<script src="./js/OrbitControls.js"></script>

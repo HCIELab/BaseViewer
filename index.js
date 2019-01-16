@@ -8,6 +8,7 @@ if ( WEBGL.isWebGLAvailable() === false ) {
 
 //global vars
 var camera, controls, scene, renderer;
+const sideBarWidth = 0;
 
 //init the scene and request it to be animated
 init();
@@ -35,15 +36,18 @@ function init() {
 	//new ThreeJS scene created
 	scene = new THREE.Scene();
 	scene.background = new THREE.Color( 0xcccccc );
+	
+	var widthWithoutSideBar = window.innerWidth - sideBarWidth;
 
 	//new ThreeJS renderer
 	renderer = new THREE.WebGLRenderer( { antialias: true } );
 	renderer.setPixelRatio( window.devicePixelRatio );
-	renderer.setSize( window.innerWidth, window.innerHeight );
-	document.body.appendChild( renderer.domElement );
+	renderer.setSize( widthWithoutSideBar, window.innerHeight );
+	document.getElementById("canvas-wrapper").appendChild( renderer.domElement );
+	//document.body.appendChild( renderer.domElement );
 
 	//new camera
-	camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 1000 );
+	camera = new THREE.PerspectiveCamera( 60, widthWithoutSideBar / window.innerHeight, 1, 1000 );
 	camera.position.set( 400, 200, 0 );
 
 	// controls
@@ -87,10 +91,12 @@ function init() {
 //change view size when the window resizes
 function onWindowResize() {
 
-	camera.aspect = window.innerWidth / window.innerHeight;
+	var widthWithoutSideBar = window.innerWidth - sideBarWidth;
+
+	camera.aspect = widthWithoutSideBar / window.innerHeight;
 	camera.updateProjectionMatrix();
 
-	renderer.setSize( window.innerWidth, window.innerHeight );
+	renderer.setSize( widthWithoutSideBar, window.innerHeight );
 
 }
 
