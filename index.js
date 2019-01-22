@@ -30,6 +30,16 @@ function addSTLObj(pathToLoad) {
 	animate();
 }
 
+function addObjFile(pathToLoad) {
+    console.log('Loaded the file');
+	var loader = new THREE.OBJLoader();
+	loader.load(pathToLoad, function(object) {
+	scene.add(object);
+	console.log('Added the object to the scene');
+});
+animate();
+}
+
 //this function inits the entire scene
 function init() {
 
@@ -48,7 +58,7 @@ function init() {
 
 	//new camera
 	camera = new THREE.PerspectiveCamera( 60, widthWithoutSideBar / window.innerHeight, 1, 1000 );
-	camera.position.set( 400, 200, 0 );
+	camera.position.set( 400, 200, 100 );
 
 	// controls
 
@@ -85,6 +95,9 @@ function init() {
 	scene.add( light );
 
 	window.addEventListener( 'resize', onWindowResize, false );
+
+	var axesHelper = new THREE.AxesHelper( 100);
+	scene.add( axesHelper );
 
 }
 
@@ -148,7 +161,10 @@ function dropHandler(ev) {
 
 				var reader = new FileReader();
 				reader.onloadend = function() {
-					addSTLObj(this.result); 
+					if(fileName.substr(fileName.length - 3) === "stl")
+						addSTLObj(this.result);
+					else if(fileName.substr(fileName.length - 3) === "obj")
+						addObjFile(this.result); 
 				}
 				reader.readAsDataURL(file);
 			}
