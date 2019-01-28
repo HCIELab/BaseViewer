@@ -65,6 +65,16 @@ function init() {
 	renderer.setPixelRatio( window.devicePixelRatio );
 	renderer.setSize( widthWithoutSideBar, window.innerHeight );
 	document.getElementById("canvasWrapper").appendChild( renderer.domElement );
+
+	//Clipping Planes
+
+	var globalPlane = new THREE.Plane( new THREE.Vector3( 0, - 1, 0 ), 0.8 );
+	var globalPlanes = [ globalPlane ],
+					Empty = Object.freeze( [] );
+	renderer.clippingPlanes = globalPlanes;
+	renderer.localClippingEnabled = true;
+
+
 	//document.body.appendChild( renderer.domElement );
 
 	//new camera

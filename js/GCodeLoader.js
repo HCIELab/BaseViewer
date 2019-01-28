@@ -182,6 +182,7 @@ THREE.GCodeLoader.prototype.parse = function ( data ) {
 		geometry.addAttribute( 'position', new THREE.Float32BufferAttribute( vertex, 3 ) );
 
 		var segments = new THREE.LineSegments( geometry, extruding ? extrudingMaterial : pathMaterial );
+		//var segments = new THREE.LineSegments( geometry, extruding ? material : material );
 		segments.name = 'layer' + i;
 		object.add( segments );
 
