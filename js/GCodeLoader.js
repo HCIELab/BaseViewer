@@ -169,8 +169,8 @@ THREE.GCodeLoader.prototype.parse = function ( data ) {
 			state = line;
 
 		} else {
-
-			console.warn( 'THREE.GCodeLoader: Command not supported:' + cmd );
+			//KSF commented out below to prevent overcommenting
+			//console.warn( 'THREE.GCodeLoader: Command not supported:' + cmd );
 
 		}
 
