@@ -26,6 +26,7 @@ function addSTLObj(pathToLoad) {
 		mesh.castShadow = true;
 		mesh.receiveShadow = true;
 		scene.add( mesh );
+		console.log('Added the STL object to the scene');
 	} );
 	animate();
 }
@@ -34,10 +35,20 @@ function addObjFile(pathToLoad) {
     console.log('Loaded the file');
 	var loader = new THREE.OBJLoader();
 	loader.load(pathToLoad, function(object) {
-	scene.add(object);
-	console.log('Added the object to the scene');
-});
-animate();
+		scene.add(object);
+		console.log('Added the OBJ object to the scene');
+	});
+	animate();
+}
+
+function addGCodeFile(pathToLoad) {
+    console.log('Loaded the file');
+	var loader = new THREE.GCodeLoader();
+	loader.load(pathToLoad, function(object) {
+		scene.add(object);
+		console.log('Added the GCODE object to the scene');
+	});
+	animate();
 }
 
 //this function inits the entire scene
@@ -161,10 +172,13 @@ function dropHandler(ev) {
 
 				var reader = new FileReader();
 				reader.onloadend = function() {
-					if(fileName.substr(fileName.length - 3) === "stl")
+					if(fileName.substr(fileName.length - 3) === "stl") {
 						addSTLObj(this.result);
-					else if(fileName.substr(fileName.length - 3) === "obj")
-						addObjFile(this.result); 
+					} else if(fileName.substr(fileName.length - 3) === "obj") {
+						addObjFile(this.result);
+					} else if(fileName.substr(fileName.length - 5) === "gcode") {
+						addGCodeFile(this.result);
+					}
 				}
 				reader.readAsDataURL(file);
 			}
