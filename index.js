@@ -48,6 +48,17 @@ function addGCodeFile(pathToLoad) {
 		scene.add(object);
 		console.log('Added the GCODE object to the scene');
 	});
+	var sidebar = document.getElementById("sidebar"); 
+	var slider = document.createElement("input");
+	slider.type = "range";
+	slider.min = 1;
+	slider.max = 100;
+	slider.value = 100;
+	slider.class = "slider";
+	slider.id = "gcodeSlider";
+	
+	sidebar.appendChild(slider);
+
 	animate();
 }
 
