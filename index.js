@@ -10,6 +10,10 @@ if ( WEBGL.isWebGLAvailable() === false ) {
 var camera, controls, scene, renderer;
 const sideBarWidth = document.getElementById("sidebar").offsetWidth;
 
+var globalPlane; 			// this is the clipping plane (currently used for GCode objects)
+var globalPlanes;			// this is the array containing the clipping plane above it.
+var heightOfCurrentObject;	// this is the height of the object, to know what the max clipping plane should be
+
 //init the scene and request it to be animated
 init();
 animate();
@@ -42,24 +46,42 @@ function addObjFile(pathToLoad) {
 }
 
 function addGCodeFile(pathToLoad) {
-    console.log('Loaded the file');
 	var loader = new THREE.GCodeLoader();
+	
+	console.log('Loaded the file');
 	loader.load(pathToLoad, function(object) {
 		scene.add(object);
 		console.log('Added the GCODE object to the scene');
-	});
-	var sidebar = document.getElementById("sidebar"); 
-	var slider = document.createElement("input");
-	slider.type = "range";
-	slider.min = 1;
-	slider.max = 100;
-	slider.value = 100;
-	slider.class = "slider";
-	slider.id = "gcodeSlider";
-	
-	sidebar.appendChild(slider);
+		//to get the max and min sizes for the clipping plane
+		var box = new THREE.Box3().setFromObject( object );
+		minLayerLocation = box.min.y;
+		maxLayerLocation = box.max.y;
+		console.log("BOX min: "+minLayerLocation);
+		console.log("BOXmax: "+maxLayerLocation);
+		var sidebar = document.getElementById("sidebar");
+		var slider = document.createElement("input");
+		slider.setAttribute("type", "range");
+		slider.setAttribute("oninput", "updateSlider(this.value)");
+		var minS = Math.ceil(minLayerLocation);
+		var maxS = Math.ceil(maxLayerLocation);
+		slider.setAttribute("min", minS);
+		slider.setAttribute("max", maxS);
 
+		slider.setAttribute("value", maxS); //set default value to max (full view)
+		globalPlane.constant = maxS; //set default plane constant to max (full view)
+		slider.id = "gcodeSlider";
+		sidebar.appendChild(slider);
+		//add the global planes array as the rendering clipping plane.
+		renderer.clippingPlanes = globalPlanes;
+	});
 	animate();
+}
+
+var globalPlane;
+
+function updateSlider(sliderValue) {
+	console.log("slider is changing");
+	globalPlane.constant = sliderValue;
 }
 
 //this function inits the entire scene
@@ -78,11 +100,10 @@ function init() {
 	document.getElementById("canvasWrapper").appendChild( renderer.domElement );
 
 	//Clipping Planes
-
-	var globalPlane = new THREE.Plane( new THREE.Vector3( 0, - 1, 0 ), 0.8 );
-	var globalPlanes = [ globalPlane ],
+	globalPlane = new THREE.Plane( new THREE.Vector3( 0, - 1, 0 ), 0.8 );
+	globalPlanes = [ globalPlane ],
 					Empty = Object.freeze( [] );
-	renderer.clippingPlanes = globalPlanes;
+	renderer.clippingPlanes = Empty;
 	renderer.localClippingEnabled = true;
 
 
