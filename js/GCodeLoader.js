@@ -46,10 +46,11 @@ THREE.GCodeLoader.prototype.parse = function ( data ) {
 
 	var currentLayer = undefined;
 
-	var pathMaterial = new THREE.LineBasicMaterial( { color: 0xFF0000 } );
+	var pathMaterial = new THREE.MeshPhongMaterial( { color: 0xffffff, flatShading: true } );//new THREE.LineBasicMaterial( { color: 0xFF0000 } );
 	pathMaterial.name = 'path';
 
-	var extrudingMaterial = new THREE.LineBasicMaterial( { color: 0x00FF00 } );
+	//var extrudingMaterial = new THREE.LineBasicMaterial( { color: 0x00FF00 } );
+	var extrudingMaterial = new THREE.MeshPhongMaterial( { color: 0xffffff, flatShading: true } );
 	extrudingMaterial.name = 'extruded';
 
 	function newLayer( line ) {

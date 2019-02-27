@@ -48,6 +48,8 @@ function addObjFile(pathToLoad) {
 function addGCodeFile(pathToLoad) {
 	var loader = new THREE.GCodeLoader();
 	
+	
+	
 	console.log('Loaded the file');
 	loader.load(pathToLoad, function(object) {
 		scene.add(object);
@@ -134,6 +136,10 @@ function init() {
 
 	var geometry = new THREE.CylinderBufferGeometry( 0, 10, 30, 4, 1 );
 	var material = new THREE.MeshPhongMaterial( { color: 0xffffff, flatShading: true } );
+	
+	var light = new THREE.PointLight( 0xff0000, 1, 0, 1 );
+	light.position.set( 50, 50, 50 );
+	scene.add( light );
 	
 	// lights (these are distinct so that we can test rotation, but it could easy be uniform to look nicer)
 	var light = new THREE.DirectionalLight( 0xffffff );
