@@ -181,7 +181,7 @@ THREE.GCodeLoader.prototype.parse = function ( data ) {
 		var pathMaterial = new THREE.LineBasicMaterial( { color: 0xFF0000, lights: false } );
 		pathMaterial.name = 'path';
 		
-		var extrudingMaterial = new THREE.LineBasicMaterial( { color: 0x00FF00, lights: false } );
+		var extrudingMaterial = new THREE.LineBasicMaterial( { color: 0x8B0000, lights: false } );
 		extrudingMaterial.name = 'extruded';
 
 		var geometry = new THREE.BufferGeometry();

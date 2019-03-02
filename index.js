@@ -64,7 +64,7 @@ function addGCodeFile(pathToLoad) {
 		console.log("BOXmax: "+maxLayerLocation);
 		
 */
-		numberOfLayersInObject = 200
+		numberOfLayersInObject = object.children.length;
 		var sidebar = document.getElementById("sidebar");
 		var slider = document.createElement("input");
 		slider.setAttribute("type", "range");
@@ -99,7 +99,7 @@ function updateSlider(sliderValue) {
 		if (layerNumber + 3 > sliderValue) {
 			partialLayer.material.color.setHex( 0xffffff );	
 		} else {
-			partialLayer.material.color.setHex( 0x00ff00 );
+			partialLayer.material.color.setHex( 0x8B0000 );
 		}
 		
 		if (layerNumber <= sliderValue) {
