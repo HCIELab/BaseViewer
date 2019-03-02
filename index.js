@@ -55,6 +55,15 @@ function addGCodeFile(pathToLoad) {
 		gcodeObject = object;
 		scene.add(object);
 		console.log('Added the GCODE object to the scene');
+		
+/*
+		var geometry = object.geometry;
+	    geometry.computeBoundingBox();   
+	    center = geometry.boundingBox.getCenter();
+	    mesh.localToWorld( center );
+	    console.log(center);
+	    console.log("what?");
+*/
 		//to get the max and min sizes for the clipping plane
 /*
 		var box = new THREE.Box3().setFromObject( object );
@@ -99,7 +108,7 @@ function updateSlider(sliderValue) {
 		if (layerNumber + 3 > sliderValue) {
 			partialLayer.material.color.setHex( 0xffffff );	
 		} else {
-			partialLayer.material.color.setHex( 0x8B0000 );
+			partialLayer.material.color.setHex( 0xa31f34 );
 		}
 		
 		if (layerNumber <= sliderValue) {

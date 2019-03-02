@@ -31,3 +31,8 @@ a {
 	top:0;
 	right:0;
 }
+
+input {
+	transform: rotate(-90deg);
+margin-top: 20vh;
+}
