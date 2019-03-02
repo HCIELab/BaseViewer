@@ -9,13 +9,11 @@
  * @param {Manager} manager Loading manager.
  * @author tentone
  * @author joewalnes
+ * @author Modifications by Kenny Friedman.
  */
+
 THREE.GCodeLoader = function ( manager ) {
-
 	this.manager = ( manager !== undefined ) ? manager : THREE.DefaultLoadingManager;
-
-	this.splitLayer = false;
-
 };
 
 THREE.GCodeLoader.prototype.load = function ( url, onLoad, onProgress, onError ) {
@@ -46,12 +44,11 @@ THREE.GCodeLoader.prototype.parse = function ( data ) {
 
 	var currentLayer = undefined;
 
-	var pathMaterial = new THREE.MeshPhongMaterial( { color: 0xffffff, flatShading: true } );//new THREE.LineBasicMaterial( { color: 0xFF0000 } );
-	pathMaterial.name = 'path';
 
-	//var extrudingMaterial = new THREE.LineBasicMaterial( { color: 0x00FF00 } );
-	var extrudingMaterial = new THREE.MeshPhongMaterial( { color: 0xffffff, flatShading: true } );
-	extrudingMaterial.name = 'extruded';
+	
+	
+	var topViewMaterial = new THREE.LineBasicMaterial( { color: 0x0000ff, lights: false } );
+	topViewMaterial.name = 'top';
 
 	function newLayer( line ) {
 
@@ -96,6 +93,8 @@ THREE.GCodeLoader.prototype.parse = function ( data ) {
 	}
 
 	var lines = data.replace( /;.+/g, '' ).split( '\n' );
+	
+	var topLine = 0
 
 	for ( var i = 0; i < lines.length; i ++ ) {
 
@@ -172,19 +171,25 @@ THREE.GCodeLoader.prototype.parse = function ( data ) {
 		} else {
 			//KSF commented out below to prevent overcommenting
 			//console.warn( 'THREE.GCodeLoader: Command not supported:' + cmd );
-
 		}
-
 	}
 
 	function addObject( vertex, extruding ) {
+		
+		if (!extruding) { return }
+		
+		var pathMaterial = new THREE.LineBasicMaterial( { color: 0xFF0000, lights: false } );
+		pathMaterial.name = 'path';
+		
+		var extrudingMaterial = new THREE.LineBasicMaterial( { color: 0x00FF00, lights: false } );
+		extrudingMaterial.name = 'extruded';
 
 		var geometry = new THREE.BufferGeometry();
 		geometry.addAttribute( 'position', new THREE.Float32BufferAttribute( vertex, 3 ) );
 
 		var segments = new THREE.LineSegments( geometry, extruding ? extrudingMaterial : pathMaterial );
 		//var segments = new THREE.LineSegments( geometry, extruding ? material : material );
-		segments.name = 'layer' + i;
+		segments.name = '' + i;
 		object.add( segments );
 
 	}
@@ -192,33 +197,14 @@ THREE.GCodeLoader.prototype.parse = function ( data ) {
 	var object = new THREE.Group();
 	object.name = 'gcode';
 
-	if ( this.splitLayer ) {
+	for ( var i = 0; i < layers.length; i ++ ) {
 
-		for ( var i = 0; i < layers.length; i ++ ) {
-
-			var layer = layers[ i ];
-			addObject( layer.vertex, true );
-			addObject( layer.pathVertex, false );
-
-		}
-
-	} else {
-
-		var vertex = [], pathVertex = [];
-
-		for ( var i = 0; i < layers.length; i ++ ) {
-
-			var layer = layers[ i ];
-
-			vertex = vertex.concat( layer.vertex );
-			pathVertex = pathVertex.concat( layer.pathVertex );
-
-		}
-
-		addObject( vertex, true );
-		addObject( pathVertex, false );
+		var layer = layers[ i ];
+		addObject( layer.vertex, true );
+		addObject( layer.pathVertex, false );
 
 	}
+
 
 	object.quaternion.setFromEuler( new THREE.Euler( - Math.PI / 2, 0, 0 ) );
 

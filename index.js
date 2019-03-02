@@ -14,6 +14,8 @@ var globalPlane; 			// this is the clipping plane (currently used for GCode obje
 var globalPlanes;			// this is the array containing the clipping plane above it.
 var heightOfCurrentObject;	// this is the height of the object, to know what the max clipping plane should be
 
+var gcodeObject;
+
 //init the scene and request it to be animated
 init();
 animate();
@@ -48,24 +50,27 @@ function addObjFile(pathToLoad) {
 function addGCodeFile(pathToLoad) {
 	var loader = new THREE.GCodeLoader();
 	
-	
-	
 	console.log('Loaded the file');
 	loader.load(pathToLoad, function(object) {
+		gcodeObject = object;
 		scene.add(object);
 		console.log('Added the GCODE object to the scene');
 		//to get the max and min sizes for the clipping plane
+/*
 		var box = new THREE.Box3().setFromObject( object );
 		minLayerLocation = box.min.y;
 		maxLayerLocation = box.max.y;
 		console.log("BOX min: "+minLayerLocation);
 		console.log("BOXmax: "+maxLayerLocation);
+		
+*/
+		numberOfLayersInObject = 200
 		var sidebar = document.getElementById("sidebar");
 		var slider = document.createElement("input");
 		slider.setAttribute("type", "range");
 		slider.setAttribute("oninput", "updateSlider(this.value)");
-		var minS = Math.ceil(minLayerLocation);
-		var maxS = Math.ceil(maxLayerLocation);
+		var minS = Math.ceil(0/* minLayerLocation */);
+		var maxS = Math.ceil(numberOfLayersInObject/* maxLayerLocation */);
 		slider.setAttribute("min", minS);
 		slider.setAttribute("max", maxS);
 
@@ -74,7 +79,7 @@ function addGCodeFile(pathToLoad) {
 		slider.id = "gcodeSlider";
 		sidebar.appendChild(slider);
 		//add the global planes array as the rendering clipping plane.
-		renderer.clippingPlanes = globalPlanes;
+		//renderer.clippingPlanes = globalPlanes;
 	});
 	animate();
 }
@@ -82,8 +87,26 @@ function addGCodeFile(pathToLoad) {
 var globalPlane;
 
 function updateSlider(sliderValue) {
-	console.log("slider is changing");
-	globalPlane.constant = sliderValue;
+	//globalPlane.constant = sliderValue;
+	console.log(gcodeObject.children.length)
+	for (var i=0; i<gcodeObject.children.length; i++) {
+		partialLayer = gcodeObject.children[i];
+		layerNumber = parseInt(partialLayer.name);
+		if (layerNumber > sliderValue) {
+			partialLayer.visible = false;
+		}
+		
+		if (layerNumber + 3 > sliderValue) {
+			partialLayer.material.color.setHex( 0xffffff );	
+		} else {
+			partialLayer.material.color.setHex( 0x00ff00 );
+		}
+		
+		if (layerNumber <= sliderValue) {
+			
+			partialLayer.visible = true;
+		}
+	}
 }
 
 //this function inits the entire scene
