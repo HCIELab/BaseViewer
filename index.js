@@ -61,36 +61,23 @@ function addGCodeFile(pathToLoad) {
 		var vectOffset = new THREE.Vector3(0, 0, 0 );
 	    var bbox = new THREE.Box3().setFromObject(object);
 	    
+/*
 	    var axesHelper = new THREE.AxesHelper( 5 );
-scene.add( axesHelper );
+		scene.add( axesHelper );
+*/
 
-		object.center();
-	    
 	    console.log(object.mesh)
 
-/*
-		var wf = new THREE.MeshBasicMaterial({
-			    color: 0xff0000,
-			    wireframe: true
-		});
-		bbox.material = wf;
-*/
-		//bbox.setFromCenterAndSize( new THREE.Vector3( 1, 1, 1 ), new THREE.Vector3( 2, 1, 3 ) );
 		var helper = new THREE.Box3Helper( bbox, 0xffff00 );
-		
-		//scene.add(bbox);
+	
 	    bbox.getCenter(vectOffset);
 	    
-/*
-	    bbox.translateX();
-	    bbox.translateY();
-	    
-*/
 	    console.log(vectOffset);
-// 		console.log(vectOffset.x);
-		object.translateX(-2*vectOffset.x);
-		object.translateY(-2*vectOffset.y);
-		
+	
+		object.position.x -= vectOffset.x;
+		object.position.y -= vectOffset.y;
+		object.position.z -= vectOffset.z;
+/*
 		
 		//helper.translateX(-vectOffset.x);
 		//helper.translateY(-vectOffset.y);
@@ -99,22 +86,9 @@ scene.add( axesHelper );
 		var helper = new THREE.Box3Helper( bbox, 0xffff00 );
 		bbox.getCenter(vectOffset);
 		console.log(vectOffset);
-		
-		scene.add( helper );
-// 		object.translateZ(-vectOffset.z);
-	    //center = geometry.boundingBox.getCenter();
-	    //mesh.localToWorld( center );
-	    //console.log(center);
-	    //console.log("what?");
-		//to get the max and min sizes for the clipping plane
-/*
-		var box = new THREE.Box3().setFromObject( object );
-		minLayerLocation = box.min.y;
-		maxLayerLocation = box.max.y;
-		console.log("BOX min: "+minLayerLocation);
-		console.log("BOXmax: "+maxLayerLocation);
-		
 */
+		
+// 		scene.add( helper );
 		numberOfLayersInObject = object.children.length;
 		var sidebar = document.getElementById("sidebar");
 		var slider = document.createElement("input");
