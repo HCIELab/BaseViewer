@@ -56,14 +56,56 @@ function addGCodeFile(pathToLoad) {
 		scene.add(object);
 		console.log('Added the GCODE object to the scene');
 		
+		//var geometry = object.geometry;
+	    //geometry.computeBoundingBox();
+		var vectOffset = new THREE.Vector3(0, 0, 0 );
+	    var bbox = new THREE.Box3().setFromObject(object);
+	    
+	    var axesHelper = new THREE.AxesHelper( 5 );
+scene.add( axesHelper );
+
+		object.center();
+	    
+	    console.log(object.mesh)
+
 /*
-		var geometry = object.geometry;
-	    geometry.computeBoundingBox();   
-	    center = geometry.boundingBox.getCenter();
-	    mesh.localToWorld( center );
-	    console.log(center);
-	    console.log("what?");
+		var wf = new THREE.MeshBasicMaterial({
+			    color: 0xff0000,
+			    wireframe: true
+		});
+		bbox.material = wf;
 */
+		//bbox.setFromCenterAndSize( new THREE.Vector3( 1, 1, 1 ), new THREE.Vector3( 2, 1, 3 ) );
+		var helper = new THREE.Box3Helper( bbox, 0xffff00 );
+		
+		//scene.add(bbox);
+	    bbox.getCenter(vectOffset);
+	    
+/*
+	    bbox.translateX();
+	    bbox.translateY();
+	    
+*/
+	    console.log(vectOffset);
+// 		console.log(vectOffset.x);
+		object.translateX(-2*vectOffset.x);
+		object.translateY(-2*vectOffset.y);
+		
+		
+		//helper.translateX(-vectOffset.x);
+		//helper.translateY(-vectOffset.y);
+		
+		var bbox = new THREE.Box3().setFromObject(object);
+		var helper = new THREE.Box3Helper( bbox, 0xffff00 );
+		bbox.getCenter(vectOffset);
+		console.log(vectOffset);
+		
+		scene.add( helper );
+// 		object.translateZ(-vectOffset.z);
+	    //center = geometry.boundingBox.getCenter();
+	    //mesh.localToWorld( center );
+	    //console.log(center);
+	    //console.log("what?");
 		//to get the max and min sizes for the clipping plane
 /*
 		var box = new THREE.Box3().setFromObject( object );

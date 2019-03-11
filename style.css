@@ -24,7 +24,7 @@ a {
 }
 
 #sidebar {
-	width: 320px;
+	width: 100px;
 	background-color: white;
 	height: 100vh;
 	position: fixed;
