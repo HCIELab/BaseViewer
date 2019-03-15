@@ -33,6 +33,19 @@ function addSTLObj(pathToLoad) {
 		mesh.receiveShadow = true;
 		scene.add( mesh );
 		console.log('Added the STL object to the scene');
+		
+		
+		//Changes camera to zoom in
+		var bBox = new THREE.Box3().setFromObject(mesh);
+		var height = bBox.getSize().y;
+		var dist = height / (2 * Math.tan(camera.fov * Math.PI / 360));
+		var pos = scene.position;
+		
+		// fudge factor so the object doesn't take up the whole view
+		camera.position.set(pos.x, pos.y, dist * 1.5); 
+		camera.lookAt(pos);
+		
+		
 	} );
 	animate();
 }
@@ -105,6 +118,20 @@ function addGCodeFile(pathToLoad) {
 		sidebar.appendChild(slider);
 		//add the global planes array as the rendering clipping plane.
 		//renderer.clippingPlanes = globalPlanes;
+		
+		
+		//Changes camera to zoom in
+		var bBox = new THREE.Box3().setFromObject(object);
+		var height = bBox.getSize().y;
+		var dist = height / (2 * Math.tan(camera.fov * Math.PI / 360));
+		var pos = scene.position;
+		
+		// fudge factor so the object doesn't take up the whole view
+		camera.position.set(pos.x, pos.y, dist * 1.5); 
+		camera.lookAt(pos);
+
+		
+		
 	});
 	animate();
 }
